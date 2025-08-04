@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMP Negeri 2 Kota Sukabumi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .admin-panel, .login-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+        .admin-content {
+            background: white;
+            margin: 2% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .login-content {
+            background: white;
+            margin: 15% auto;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+        .navbar-fixed {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 999;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .content-section {
+            padding-top: 80px;
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .color-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .color-preview:hover {
+            transform: scale(1.1);
+            border-color: #374151;
+        }
+        .color-preview.active {
+            border-color: #1f2937;
+            transform: scale(1.1);
+        }
+        .background-preview {
+            width: 100px;
+            height: 60px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        .background-preview:hover {
+            transform: scale(1.05);
+            border-color: #374151;
+        }
+        .background-preview.active {
+            border-color: #1f2937;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="navbar-fixed bg-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">SMP Negeri 2</h1>
+                        <p class="text-sm text-gray-600">Kota Sukabumi</p>
+                    </div>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#beranda" class="text-gray-700 hover:text-blue-600 transition-colors">Beranda</a>
+                    <a href="#profil" class="text-gray-700 hover:text-blue-600 transition-colors">Profil</a>
+                    <a href="#berita" class="text-gray-700 hover:text-blue-600 transition-colors">Berita</a>
+                    <a href="#galeri" class="text-gray-700 hover:text-blue-600 transition-colors">Galeri</a>
+                    <a href="#video" class="text-gray-700 hover:text-blue-600 transition-colors">Video</a>
+                    <a href="#info" class="text-gray-700 hover:text-blue-600 transition-colors">Info</a>
+                    <a href="#kontak" class="text-gray-700 hover:text-blue-600 transition-colors">Kontak</a>
+                    <button onclick="showLoginModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-cog mr-2"></i>Admin
+                    </button>
+                </div>
+                <button class="md:hidden text-gray-700" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white shadow-lg fixed top-20 left-0 right-0 z-50">
+        <div class="px-4 py-2 space-y-2">
+            <a href="#beranda" class="block py-2 text-gray-700 hover:text-blue-600">Beranda</a>
+            <a href="#profil" class="block py-2 text-gray-700 hover:text-blue-600">Profil</a>
+            <a href="#berita" class="block py-2 text-gray-700 hover:text-blue-600">Berita</a>
+            <a href="#galeri" class="block py-2 text-gray-700 hover:text-blue-600">Galeri</a>
+            <a href="#video" class="block py-2 text-gray-700 hover:text-blue-600">Video</a>
+            <a href="#info" class="block py-2 text-gray-700 hover:text-blue-600">Info</a>
+            <a href="#kontak" class="block py-2 text-gray-700 hover:text-blue-600">Kontak</a>
+            <button onclick="showLoginModal()" class="w-full text-left py-2 text-blue-600 font-semibold">
+                <i class="fas fa-cog mr-2"></i>Admin Panel
+            </button>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="beranda" class="hero-bg text-white content-section">
+        <div class="container mx-auto px-4 py-20">
+            <div class="text-center animate-fade-in">
+                <h1 class="text-4xl md:text-6xl font-bold mb-6" id="heroTitle">Selamat Datang di SMP Negeri 2 Kota Sukabumi</h1>
+                <p class="text-xl md:text-2xl mb-8 opacity-90" id="heroSubtitle">Membentuk Generasi Unggul dan Berkarakter</p>
+                <div class="bg-white/20 backdrop-blur-sm rounded-lg p-6 max-w-4xl mx-auto">
+                    <h3 class="text-2xl font-bold mb-4">VISI KAMI</h3>
+                    <p class="text-lg" id="visiText">SPANDASMART (Terwujudnya Peserta Didik yang Santun, Mandiri, Amanah, Religius dan Terunggul diberbagai Bidang)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profil Section -->
+    <section id="profil" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Profil Sekolah</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="animate-fade-in">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6" id="profilTitle">Tentang SMP Negeri 2 Kota Sukabumi</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed" id="profilDesc">SMP Negeri 2 Kota Sukabumi adalah institusi pendidikan yang berkomitmen untuk menghasilkan lulusan yang berkualitas, berkarakter, dan siap menghadapi tantangan masa depan. Dengan fasilitas modern dan tenaga pengajar yang profesional, kami terus berinovasi dalam memberikan pendidikan terbaik.</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center p-4 bg-blue-50 rounded-lg">
+                            <div class="text-3xl font-bold text-blue-600" id="siswaCount">850+</div>
+                            <div class="text-gray-600">Siswa Aktif</div>
+                        </div>
+                        <div class="text-center p-4 bg-green-50 rounded-lg">
+                            <div class="text-3xl font-bold text-green-600" id="guruCount">45+</div>
+                            <div class="text-gray-600">Tenaga Pengajar</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="w-80 h-80 mx-auto bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-school text-white text-8xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Berita Section -->
+    <section id="berita" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Berita & Pengumuman</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div id="beritaContainer" class="grid md:grid-cols-3 gap-8">
+                <!-- Berita akan dimuat di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri Section -->
+    <section id="galeri" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Galeri Kegiatan</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div id="galeriContainer" class="grid md:grid-cols-4 gap-6">
+                <!-- Galeri akan dimuat di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section id="video" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Video Sekolah</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div id="videoContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Video akan dimuat di sini -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Informasi Tambahan Section -->
+    <section id="info" class="py-20 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Informasi Sekolah</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-6 bg-blue-50 rounded-lg">
+                    <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Kepala Sekolah</h3>
+                    <p class="text-gray-600" id="kepalaSekolahInfo">Drs. Ahmad Suryadi, M.Pd</p>
+                </div>
+                <div class="text-center p-6 bg-green-50 rounded-lg">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-alt text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Tahun Berdiri</h3>
+                    <p class="text-gray-600" id="tahunBerdiriInfo">1985</p>
+                </div>
+                <div class="text-center p-6 bg-yellow-50 rounded-lg">
+                    <div class="w-16 h-16 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-award text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Akreditasi</h3>
+                    <p class="text-gray-600" id="akreditasiInfo">A (Sangat Baik)</p>
+                </div>
+                <div class="text-center p-6 bg-purple-50 rounded-lg">
+                    <div class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-clock text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Jam Operasional</h3>
+                    <p class="text-gray-600" id="jamOperasionalInfo">Senin - Jumat<br>07:00 - 15:00</p>
+                </div>
+            </div>
+            <div class="mt-12 bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-8 text-white">
+                <h3 class="text-2xl font-bold mb-6 text-center">Misi Sekolah</h3>
+                <div id="misiContainer" class="space-y-3">
+                    <!-- Misi akan dimuat di sini -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontak Section -->
+    <section id="kontak" class="py-20 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4">Hubungi Kami</h2>
+                <div class="w-24 h-1 bg-blue-600 mx-auto"></div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Informasi Kontak</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-map-marker-alt text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Alamat</h4>
+                                <p class="text-gray-600" id="alamatSekolah">Jl. Pendidikan No. 123, Kota Sukabumi, Jawa Barat</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Telepon</h4>
+                                <p class="text-gray-600" id="teleponSekolah">(0266) 123-4567</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-800">Email</h4>
+                                <p class="text-gray-600" id="emailSekolah">info@smpn2sukabumi.sch.id</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-lg shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Kirim Pesan</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Nama</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Masukkan nama Anda">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Email</label>
+                            <input type="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Masukkan email Anda">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 font-semibold mb-2">Pesan</label>
+                            <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Tulis pesan Anda"></textarea>
+                        </div>
+                        <button type="button" onclick="showMessage('Demo: Pesan akan dikirim ke admin sekolah')" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                            Kirim Pesan
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">SMP Negeri 2</h3>
+                            <p class="text-gray-400">Kota Sukabumi</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">Membentuk generasi unggul dan berkarakter untuk masa depan yang lebih baik.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Menu Cepat</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#beranda" class="text-gray-400 hover:text-white transition-colors">Beranda</a></li>
+                        <li><a href="#profil" class="text-gray-400 hover:text-white transition-colors">Profil</a></li>
+                        <li><a href="#berita" class="text-gray-400 hover:text-white transition-colors">Berita</a></li>
+                        <li><a href="#galeri" class="text-gray-400 hover:text-white transition-colors">Galeri</a></li>
+                        <li><a href="#video" class="text-gray-400 hover:text-white transition-colors">Video</a></li>
+                        <li><a href="#info" class="text-gray-400 hover:text-white transition-colors">Info</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Media Sosial</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center hover:bg-red-700 transition-colors">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 Hak Cipta: Engkus Kusnandar, CCNA,.S.E,.Gr - SMP Negeri 2 Kota Sukabumi. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-content">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-lock text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Login Admin</h2>
+                <p class="text-gray-600 mt-2">Masukkan kredensial untuk mengakses panel admin</p>
+            </div>
+            
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                    <div class="relative">
+                        <input type="text" id="loginUsername" class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Masukkan username">
+                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword" class="w-full px-4 py-3 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Masukkan password">
+                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <i id="passwordToggle" class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="loginError" class="hidden bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
+                    <i class="fas fa-exclamation-triangle mr-2"></i>
+                    <span id="loginErrorText">Username atau password salah!</span>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Masuk
+                </button>
+            </form>
+            
+            <div class="mt-6 pt-6 border-t border-gray-200">
+                <div class="bg-blue-50 p-4 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-2">Demo Kredensial:</h4>
+                    <p class="text-sm text-blue-700"><strong>Username:</strong> admin</p>
+                    <p class="text-sm text-blue-700"><strong>Password:</strong> admin123</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-6">
+                <button onclick="hideLoginModal()" class="text-gray-500 hover:text-gray-700 text-sm">
+                    <i class="fas fa-times mr-1"></i>Batal
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
+        <div class="admin-content">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800">Panel Admin</h2>
+                    <p class="text-sm text-gray-600">Selamat datang, <span id="adminUsername" class="font-semibold">Admin</span></p>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="logoutAdmin()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                    <button onclick="hideAdminPanel()" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <!-- Template Warna & Background -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">
+                        <i class="fas fa-palette mr-2"></i>Kustomisasi Tampilan
+                    </h3>
+                    
+                    <!-- Pilihan Template Warna -->
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium mb-3">Template Warna</h4>
+                        <div class="grid grid-cols-6 gap-3">
+                            <div class="color-preview active" data-theme="blue" style="background: linear-gradient(135deg, #1e40af, #3b82f6);" onclick="changeColorTheme('blue')" title="Biru (Default)"></div>
+                            <div class="color-preview" data-theme="green" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="changeColorTheme('green')" title="Hijau"></div>
+                            <div class="color-preview" data-theme="purple" style="background: linear-gradient(135deg, #7c3aed, #a855f7);" onclick="changeColorTheme('purple')" title="Ungu"></div>
+                            <div class="color-preview" data-theme="red" style="background: linear-gradient(135deg, #dc2626, #ef4444);" onclick="changeColorTheme('red')" title="Merah"></div>
+                            <div class="color-preview" data-theme="orange" style="background: linear-gradient(135deg, #ea580c, #f97316);" onclick="changeColorTheme('orange')" title="Oranye"></div>
+                            <div class="color-preview" data-theme="teal" style="background: linear-gradient(135deg, #0d9488, #14b8a6);" onclick="changeColorTheme('teal')" title="Teal"></div>
+                            <div class="color-preview" data-theme="pink" style="background: linear-gradient(135deg, #db2777, #ec4899);" onclick="changeColorTheme('pink')" title="Pink"></div>
+                            <div class="color-preview" data-theme="indigo" style="background: linear-gradient(135deg, #4338ca, #6366f1);" onclick="changeColorTheme('indigo')" title="Indigo"></div>
+                            <div class="color-preview" data-theme="yellow" style="background: linear-gradient(135deg, #d97706, #f59e0b);" onclick="changeColorTheme('yellow')" title="Kuning"></div>
+                            <div class="color-preview" data-theme="gray" style="background: linear-gradient(135deg, #374151, #6b7280);" onclick="changeColorTheme('gray')" title="Abu-abu"></div>
+                            <div class="color-preview" data-theme="emerald" style="background: linear-gradient(135deg, #047857, #059669);" onclick="changeColorTheme('emerald')" title="Emerald"></div>
+                            <div class="color-preview" data-theme="cyan" style="background: linear-gradient(135deg, #0891b2, #06b6d4);" onclick="changeColorTheme('cyan')" title="Cyan"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">Klik warna untuk mengubah tema website</p>
+                    </div>
+
+                    <!-- Background Hero Section -->
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium mb-3">Background Hero Section</h4>
+                        <div class="grid grid-cols-4 gap-3 mb-4">
+                            <div class="background-preview active" data-bg="gradient" style="background: linear-gradient(135deg, #1e40af, #3b82f6);" onclick="changeBackground('gradient')" title="Gradient (Default)"></div>
+                            <div class="background-preview" data-bg="pattern1" style="background: linear-gradient(45deg, #1e40af 25%, transparent 25%), linear-gradient(-45deg, #1e40af 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #3b82f6 75%), linear-gradient(-45deg, transparent 75%, #3b82f6 75%); background-size: 20px 20px;" onclick="changeBackground('pattern1')" title="Pattern Diagonal"></div>
+                            <div class="background-preview" data-bg="pattern2" style="background: radial-gradient(circle, #1e40af 2px, transparent 2px); background-size: 20px 20px; background-color: #3b82f6;" onclick="changeBackground('pattern2')" title="Pattern Dots"></div>
+                            <div class="background-preview" data-bg="waves" style="background: linear-gradient(135deg, #1e40af, #3b82f6); position: relative;" onclick="changeBackground('waves')" title="Waves Pattern">
+                                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 20px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1200 120\" preserveAspectRatio=\"none\"><path d=\"M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z\" fill=\"%23ffffff\" fill-opacity=\"0.3\"/></svg>') no-repeat; background-size: cover;"></div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium mb-2">Upload Background Custom</label>
+                            <input type="file" id="customBgUpload" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="uploadCustomBackground(this)">
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, WebP (Max 5MB)</p>
+                        </div>
+                        <div id="customBgPreview" class="hidden mb-4">
+                            <div class="background-preview" id="customBgPreviewDiv" onclick="changeBackground('custom')" title="Custom Background"></div>
+                        </div>
+                    </div>
+
+                    <!-- Opacity Control -->
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium mb-3">Transparansi Overlay</h4>
+                        <div class="flex items-center space-x-4">
+                            <label class="text-sm">Terang</label>
+                            <input type="range" id="overlayOpacity" min="0" max="80" value="20" class="flex-1" onchange="changeOverlayOpacity(this.value)">
+                            <label class="text-sm">Gelap</label>
+                            <span id="opacityValue" class="text-sm font-medium w-12">20%</span>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Atur transparansi overlay untuk keterbacaan teks</p>
+                    </div>
+
+                    <!-- Font Style -->
+                    <div class="mb-6">
+                        <h4 class="text-md font-medium mb-3">Gaya Font</h4>
+                        <select id="fontFamily" class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="changeFontFamily(this.value)">
+                            <option value="system">Default (System)</option>
+                            <option value="serif">Serif (Times)</option>
+                            <option value="mono">Monospace (Courier)</option>
+                            <option value="cursive">Cursive (Script)</option>
+                        </select>
+                    </div>
+
+                    <!-- Preview & Reset -->
+                    <div class="flex space-x-3">
+                        <button onclick="previewChanges()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex-1">
+                            <i class="fas fa-eye mr-2"></i>Preview
+                        </button>
+                        <button onclick="resetDesign()" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex-1">
+                            <i class="fas fa-undo mr-2"></i>Reset Default
+                        </button>
+                        <button onclick="saveDesign()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 flex-1">
+                            <i class="fas fa-save mr-2"></i>Simpan
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edit Konten Utama -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Edit Konten Utama</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Judul Hero</label>
+                            <input type="text" id="editHeroTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Judul utama website">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Subtitle Hero</label>
+                            <input type="text" id="editHeroSubtitle" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Subtitle website">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Visi Sekolah</label>
+                            <textarea id="editVisi" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Visi sekolah"></textarea>
+                        </div>
+                        <button onclick="updateMainContent()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                            Update Konten
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edit Profil -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Edit Profil Sekolah</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Judul Profil</label>
+                            <input type="text" id="editProfilTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Deskripsi Profil</label>
+                            <textarea id="editProfilDesc" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md"></textarea>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Jumlah Siswa</label>
+                                <input type="text" id="editSiswaCount" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2">Jumlah Guru</label>
+                                <input type="text" id="editGuruCount" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                        <button onclick="updateProfil()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                            Update Profil
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tambah Berita -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Tambah Berita</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Judul Berita</label>
+                            <input type="text" id="newBeritaTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Judul berita">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Konten Berita</label>
+                            <textarea id="newBeritaContent" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Isi berita"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Tanggal</label>
+                            <input type="date" id="newBeritaDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <button onclick="addBerita()" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
+                            Tambah Berita
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Logo -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Upload Logo Sekolah</h3>
+                    <div class="space-y-4">
+                        <div class="text-center">
+                            <div id="logoPreview" class="w-24 h-24 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                                <i class="fas fa-graduation-cap text-white text-2xl"></i>
+                            </div>
+                            <input type="file" id="logoUpload" accept="image/*" class="hidden" onchange="previewLogo(this)">
+                            <button onclick="document.getElementById('logoUpload').click()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                <i class="fas fa-upload mr-2"></i>Upload Logo
+                            </button>
+                            <button onclick="resetLogo()" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 ml-2">
+                                Reset Default
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Gambar Galeri -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Tambah Gambar Galeri</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Judul Gambar</label>
+                            <input type="text" id="newGambarTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Judul untuk gambar">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Upload Gambar</label>
+                            <input type="file" id="gambarUpload" accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="previewGambar(this)">
+                        </div>
+                        <div id="gambarPreview" class="hidden">
+                            <img id="previewImg" class="w-full h-48 object-cover rounded-md" alt="Preview">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Kategori</label>
+                            <select id="gambarKategori" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="kegiatan">Kegiatan Sekolah</option>
+                                <option value="fasilitas">Fasilitas</option>
+                                <option value="prestasi">Prestasi</option>
+                                <option value="ekstrakurikuler">Ekstrakurikuler</option>
+                            </select>
+                        </div>
+                        <button onclick="addGambar()" class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                            <i class="fas fa-plus mr-2"></i>Tambah Gambar
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Video -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Tambah Video</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Judul Video</label>
+                            <input type="text" id="newVideoTitle" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Judul video">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Link YouTube</label>
+                            <input type="url" id="videoYouTube" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="https://www.youtube.com/watch?v=...">
+                            <p class="text-xs text-gray-500 mt-1">Masukkan link YouTube untuk video sekolah</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Atau Upload Video</label>
+                            <input type="file" id="videoUpload" accept="video/*" class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="previewVideo(this)">
+                            <p class="text-xs text-gray-500 mt-1">Format: MP4, WebM, OGV (Max 50MB)</p>
+                        </div>
+                        <div id="videoPreview" class="hidden">
+                            <video id="previewVideo" class="w-full h-48 rounded-md" controls></video>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Deskripsi</label>
+                            <textarea id="videoDesc" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Deskripsi singkat video"></textarea>
+                        </div>
+                        <button onclick="addVideo()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                            <i class="fas fa-video mr-2"></i>Tambah Video
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edit Informasi Tambahan -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Informasi Sekolah Lainnya</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Nama Kepala Sekolah</label>
+                            <input type="text" id="editKepalaSekolah" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Nama Kepala Sekolah">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Tahun Berdiri</label>
+                            <input type="number" id="editTahunBerdiri" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Tahun berdiri sekolah">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Akreditasi</label>
+                            <select id="editAkreditasi" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="A">A (Sangat Baik)</option>
+                                <option value="B">B (Baik)</option>
+                                <option value="C">C (Cukup)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Misi Sekolah</label>
+                            <textarea id="editMisi" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Misi sekolah (pisahkan dengan enter untuk setiap poin)"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Jam Operasional</label>
+                            <input type="text" id="editJamOperasional" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Senin - Jumat: 07:00 - 15:00">
+                        </div>
+                        <button onclick="updateInfoTambahan()" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                            Update Informasi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Edit Kontak -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Edit Informasi Kontak</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Alamat</label>
+                            <input type="text" id="editAlamat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Telepon</label>
+                            <input type="text" id="editTelepon" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Email</label>
+                            <input type="email" id="editEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Website</label>
+                            <input type="url" id="editWebsite" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="https://smpn2sukabumi.sch.id">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Media Sosial</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <input type="url" id="editFacebook" class="px-3 py-2 border border-gray-300 rounded-md" placeholder="Facebook URL">
+                                <input type="url" id="editInstagram" class="px-3 py-2 border border-gray-300 rounded-md" placeholder="Instagram URL">
+                                <input type="url" id="editTwitter" class="px-3 py-2 border border-gray-300 rounded-md" placeholder="Twitter URL">
+                                <input type="url" id="editYoutube" class="px-3 py-2 border border-gray-300 rounded-md" placeholder="YouTube URL">
+                            </div>
+                        </div>
+                        <button onclick="updateKontak()" class="bg-orange-600 text-white px-4 py-2 rounded-md hover:bg-orange-700">
+                            Update Kontak
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Ubah Password Admin -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Keamanan Admin</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Username Baru</label>
+                            <input type="text" id="newAdminUsername" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Username admin baru">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Password Baru</label>
+                            <input type="password" id="newAdminPassword" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Password admin baru">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Konfirmasi Password</label>
+                            <input type="password" id="confirmAdminPassword" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Konfirmasi password baru">
+                        </div>
+                        <button onclick="updateAdminCredentials()" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700">
+                            <i class="fas fa-key mr-2"></i>Update Kredensial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Manajemen Konten -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="text-lg font-semibold mb-4">Manajemen Konten</h3>
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="exportData()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                <i class="fas fa-download mr-2"></i>Export Data
+                            </button>
+                            <button onclick="resetAllData()" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                                <i class="fas fa-refresh mr-2"></i>Reset Semua
+                            </button>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Import Data</label>
+                            <input type="file" id="importData" accept=".json" class="w-full px-3 py-2 border border-gray-300 rounded-md" onchange="importData(this)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Admin credentials
+        let adminCredentials = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        let isAdminLoggedIn = false;
+        let currentAdminUsername = '';
+
+        // Design settings
+        let designSettings = {
+            colorTheme: 'blue',
+            backgroundType: 'gradient',
+            customBackground: null,
+            overlayOpacity: 20,
+            fontFamily: 'system'
+        };
+
+        // Color themes
+        const colorThemes = {
+            blue: { primary: '#1e40af', secondary: '#3b82f6', light: '#60a5fa' },
+            green: { primary: '#059669', secondary: '#10b981', light: '#34d399' },
+            purple: { primary: '#7c3aed', secondary: '#a855f7', light: '#c084fc' },
+            red: { primary: '#dc2626', secondary: '#ef4444', light: '#f87171' },
+            orange: { primary: '#ea580c', secondary: '#f97316', light: '#fb923c' },
+            teal: { primary: '#0d9488', secondary: '#14b8a6', light: '#5eead4' },
+            pink: { primary: '#db2777', secondary: '#ec4899', light: '#f472b6' },
+            indigo: { primary: '#4338ca', secondary: '#6366f1', light: '#818cf8' },
+            yellow: { primary: '#d97706', secondary: '#f59e0b', light: '#fbbf24' },
+            gray: { primary: '#374151', secondary: '#6b7280', light: '#9ca3af' },
+            emerald: { primary: '#047857', secondary: '#059669', light: '#34d399' },
+            cyan: { primary: '#0891b2', secondary: '#06b6d4', light: '#67e8f9' }
+        };
+
+        // Data storage
+        let websiteData = {
+            hero: {
+                title: "Selamat Datang di SMP Negeri 2 Kota Sukabumi",
+                subtitle: "Membentuk Generasi Unggul dan Berkarakter",
+                visi: "SPANDASMART (Terwujudnya Peserta Didik yang Santun, Mandiri, Amanah, Religius dan Terunggul diberbagai Bidang)"
+            },
+            profil: {
+                title: "Tentang SMP Negeri 2 Kota Sukabumi",
+                desc: "SMP Negeri 2 Kota Sukabumi adalah institusi pendidikan yang berkomitmen untuk menghasilkan lulusan yang berkualitas, berkarakter, dan siap menghadapi tantangan masa depan. Dengan fasilitas modern dan tenaga pengajar yang profesional, kami terus berinovasi dalam memberikan pendidikan terbaik.",
+                siswaCount: "850+",
+                guruCount: "45+"
+            },
+            kontak: {
+                alamat: "Jl. Pendidikan No. 123, Kota Sukabumi, Jawa Barat",
+                telepon: "(0266) 123-4567",
+                email: "info@smpn2sukabumi.sch.id",
+                website: "https://smpn2sukabumi.sch.id",
+                facebook: "#",
+                instagram: "#",
+                twitter: "#",
+                youtube: "#"
+            },
+            infoTambahan: {
+                kepalaSekolah: "Drs. Ahmad Suryadi, M.Pd",
+                tahunBerdiri: "1985",
+                akreditasi: "A",
+                jamOperasional: "Senin - Jumat: 07:00 - 15:00",
+                misi: [
+                    "Menyelenggarakan pendidikan yang berkualitas dan berkarakter",
+                    "Mengembangkan potensi siswa secara optimal",
+                    "Menciptakan lingkungan belajar yang kondusif",
+                    "Membangun kerjasama dengan orang tua dan masyarakat"
+                ]
+            },
+            berita: [
+                {
+                    title: "Penerimaan Siswa Baru 2025/2026",
+                    content: "Pendaftaran siswa baru telah dibuka. Dapatkan informasi lengkap di kantor sekolah.",
+                    date: "2025-01-15",
+                    icon: "fas fa-user-plus"
+                },
+                {
+                    title: "Prestasi Olimpiade Matematika",
+                    content: "Siswa kami meraih juara 1 dalam Olimpiade Matematika tingkat Kota Sukabumi.",
+                    date: "2025-01-10",
+                    icon: "fas fa-trophy"
+                },
+                {
+                    title: "Kegiatan Ekstrakurikuler",
+                    content: "Berbagai kegiatan ekstrakurikuler menarik tersedia untuk mengembangkan bakat siswa.",
+                    date: "2025-01-05",
+                    icon: "fas fa-star"
+                }
+            ],
+            galeri: [
+                { title: "Upacara Bendera", icon: "fas fa-flag", color: "bg-red-500", type: "icon", kategori: "kegiatan" },
+                { title: "Kegiatan Olahraga", icon: "fas fa-running", color: "bg-green-500", type: "icon", kategori: "kegiatan" },
+                { title: "Lomba Sains", icon: "fas fa-flask", color: "bg-blue-500", type: "icon", kategori: "prestasi" },
+                { title: "Kegiatan Seni", icon: "fas fa-palette", color: "bg-purple-500", type: "icon", kategori: "ekstrakurikuler" },
+                { title: "Perpustakaan", icon: "fas fa-book", color: "bg-yellow-500", type: "icon", kategori: "fasilitas" },
+                { title: "Lab Komputer", icon: "fas fa-computer", color: "bg-indigo-500", type: "icon", kategori: "fasilitas" },
+                { title: "Kelas Belajar", icon: "fas fa-chalkboard-teacher", color: "bg-pink-500", type: "icon", kategori: "fasilitas" },
+                { title: "Kantin Sekolah", icon: "fas fa-utensils", color: "bg-orange-500", type: "icon", kategori: "fasilitas" }
+            ],
+            videos: [
+                {
+                    title: "Profil SMP Negeri 2 Sukabumi",
+                    desc: "Video profil sekolah yang menampilkan fasilitas dan kegiatan pembelajaran",
+                    type: "youtube",
+                    url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+                },
+                {
+                    title: "Kegiatan Ekstrakurikuler",
+                    desc: "Berbagai kegiatan ekstrakurikuler yang tersedia di sekolah",
+                    type: "youtube",
+                    url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                    thumbnail: "https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+                }
+            ],
+            logo: {
+                type: "default",
+                url: null
+            }
+        };
+
+        // Design functions
+        function changeColorTheme(theme) {
+            designSettings.colorTheme = theme;
+            
+            // Update active color preview
+            document.querySelectorAll('.color-preview').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+            
+            applyColorTheme();
+        }
+
+        function applyColorTheme() {
+            const theme = colorThemes[designSettings.colorTheme];
+            const root = document.documentElement;
+            
+            // Update CSS custom properties
+            root.style.setProperty('--primary-color', theme.primary);
+            root.style.setProperty('--secondary-color', theme.secondary);
+            root.style.setProperty('--light-color', theme.light);
+            
+            // Update hero background
+            const heroSection = document.getElementById('beranda');
+            if (designSettings.backgroundType === 'gradient') {
+                heroSection.style.background = `linear-gradient(135deg, ${theme.primary} 0%, ${theme.secondary} 50%, ${theme.light} 100%)`;
+            }
+            
+            // Update all colored elements
+            updateColoredElements(theme);
+        }
+
+        function updateColoredElements(theme) {
+            // Update buttons
+            const buttons = document.querySelectorAll('.bg-blue-600, .hover\\:bg-blue-700');
+            buttons.forEach(btn => {
+                btn.className = btn.className.replace(/bg-blue-\d+/g, '').replace(/hover:bg-blue-\d+/g, '');
+                btn.style.backgroundColor = theme.primary;
+                btn.addEventListener('mouseenter', () => btn.style.backgroundColor = theme.secondary);
+                btn.addEventListener('mouseleave', () => btn.style.backgroundColor = theme.primary);
+            });
+            
+            // Update accent lines
+            const accentLines = document.querySelectorAll('.bg-blue-600');
+            accentLines.forEach(line => {
+                line.style.backgroundColor = theme.primary;
+            });
+            
+            // Update icons and colored backgrounds
+            const coloredBgs = document.querySelectorAll('.bg-blue-50, .bg-blue-500, .bg-blue-600');
+            coloredBgs.forEach(bg => {
+                if (bg.classList.contains('bg-blue-50')) {
+                    bg.style.backgroundColor = theme.light + '20'; // Add transparency
+                } else {
+                    bg.style.backgroundColor = theme.primary;
+                }
+            });
+        }
+
+        function changeBackground(type) {
+            designSettings.backgroundType = type;
+            
+            // Update active background preview
+            document.querySelectorAll('.background-preview').forEach(el => el.classList.remove('active'));
+            document.querySelector(`[data-bg="${type}"]`).classList.add('active');
+            
+            applyBackground();
+        }
+
+        function applyBackground() {
+            const heroSection = document.getElementById('beranda');
+            const theme = colorThemes[designSettings.colorTheme];
+            
+            switch (designSettings.backgroundType) {
+                case 'gradient':
+                    heroSection.style.background = `linear-gradient(135deg, ${theme.primary} 0%, ${theme.secondary} 50%, ${theme.light} 100%)`;
+                    break;
+                case 'pattern1':
+                    heroSection.style.background = `
+                        linear-gradient(45deg, ${theme.primary} 25%, transparent 25%), 
+                        linear-gradient(-45deg, ${theme.primary} 25%, transparent 25%), 
+                        linear-gradient(45deg, transparent 75%, ${theme.secondary} 75%), 
+                        linear-gradient(-45deg, transparent 75%, ${theme.secondary} 75%)
+                    `;
+                    heroSection.style.backgroundSize = '20px 20px';
+                    heroSection.style.backgroundColor = theme.light;
+                    break;
+                case 'pattern2':
+                    heroSection.style.background = `radial-gradient(circle, ${theme.primary} 2px, transparent 2px)`;
+                    heroSection.style.backgroundSize = '20px 20px';
+                    heroSection.style.backgroundColor = theme.secondary;
+                    break;
+                case 'waves':
+                    heroSection.style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+                    // Add wave pattern overlay
+                    break;
+                case 'custom':
+                    if (designSettings.customBackground) {
+                        heroSection.style.background = `url(${designSettings.customBackground})`;
+                        heroSection.style.backgroundSize = 'cover';
+                        heroSection.style.backgroundPosition = 'center';
+                    }
+                    break;
+            }
+            
+            // Apply overlay
+            applyOverlay();
+        }
+
+        function uploadCustomBackground(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                    showMessage('Ukuran file terlalu besar! Maksimal 5MB.');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    designSettings.customBackground = e.target.result;
+                    
+                    // Show preview
+                    const previewDiv = document.getElementById('customBgPreviewDiv');
+                    previewDiv.style.backgroundImage = `url(${e.target.result})`;
+                    previewDiv.style.backgroundSize = 'cover';
+                    previewDiv.style.backgroundPosition = 'center';
+                    document.getElementById('customBgPreview').classList.remove('hidden');
+                    
+                    showMessage('Background custom berhasil diupload! Klik preview untuk melihat hasilnya.');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function changeOverlayOpacity(value) {
+            designSettings.overlayOpacity = value;
+            document.getElementById('opacityValue').textContent = value + '%';
+            applyOverlay();
+        }
+
+        function applyOverlay() {
+            const heroSection = document.getElementById('beranda');
+            const overlay = heroSection.querySelector('.overlay') || document.createElement('div');
+            
+            if (!heroSection.querySelector('.overlay')) {
+                overlay.className = 'overlay absolute inset-0';
+                overlay.style.background = `rgba(0, 0, 0, ${designSettings.overlayOpacity / 100})`;
+                heroSection.style.position = 'relative';
+                heroSection.insertBefore(overlay, heroSection.firstChild);
+            } else {
+                overlay.style.background = `rgba(0, 0, 0, ${designSettings.overlayOpacity / 100})`;
+            }
+        }
+
+        function changeFontFamily(family) {
+            designSettings.fontFamily = family;
+            
+            let fontStack;
+            switch (family) {
+                case 'serif':
+                    fontStack = 'Georgia, "Times New Roman", Times, serif';
+                    break;
+                case 'mono':
+                    fontStack = '"Courier New", Courier, monospace';
+                    break;
+                case 'cursive':
+                    fontStack = '"Brush Script MT", cursive';
+                    break;
+                default:
+                    fontStack = 'system-ui, -apple-system, sans-serif';
+            }
+            
+            document.body.style.fontFamily = fontStack;
+        }
+
+        function previewChanges() {
+            applyColorTheme();
+            applyBackground();
+            showMessage('Preview diterapkan! Scroll ke atas untuk melihat perubahan.');
+        }
+
+        function resetDesign() {
+            if (confirm('Yakin ingin mereset desain ke pengaturan default?')) {
+                designSettings = {
+                    colorTheme: 'blue',
+                    backgroundType: 'gradient',
+                    customBackground: null,
+                    overlayOpacity: 20,
+                    fontFamily: 'system'
+                };
+                
+                // Reset UI
+                document.querySelectorAll('.color-preview').forEach(el => el.classList.remove('active'));
+                document.querySelector('[data-theme="blue"]').classList.add('active');
+                document.querySelectorAll('.background-preview').forEach(el => el.classList.remove('active'));
+                document.querySelector('[data-bg="gradient"]').classList.add('active');
+                document.getElementById('overlayOpacity').value = 20;
+                document.getElementById('opacityValue').textContent = '20%';
+                document.getElementById('fontFamily').value = 'system';
+                document.getElementById('customBgPreview').classList.add('hidden');
+                
+                // Apply changes
+                applyColorTheme();
+                applyBackground();
+                changeFontFamily('system');
+                
+                showMessage('Desain berhasil direset ke pengaturan default!');
+            }
+        }
+
+        function saveDesign() {
+            // Save design settings to localStorage
+            localStorage.setItem('websiteDesign', JSON.stringify(designSettings));
+            showMessage('Pengaturan desain berhasil disimpan!');
+        }
+
+        function loadDesign() {
+            const saved = localStorage.getItem('websiteDesign');
+            if (saved) {
+                designSettings = JSON.parse(saved);
+                
+                // Apply saved settings
+                document.querySelectorAll('.color-preview').forEach(el => el.classList.remove('active'));
+                document.querySelector(`[data-theme="${designSettings.colorTheme}"]`).classList.add('active');
+                document.querySelectorAll('.background-preview').forEach(el => el.classList.remove('active'));
+                document.querySelector(`[data-bg="${designSettings.backgroundType}"]`).classList.add('active');
+                document.getElementById('overlayOpacity').value = designSettings.overlayOpacity;
+                document.getElementById('opacityValue').textContent = designSettings.overlayOpacity + '%';
+                document.getElementById('fontFamily').value = designSettings.fontFamily;
+                
+                applyColorTheme();
+                applyBackground();
+                changeFontFamily(designSettings.fontFamily);
+            }
+        }
+
+        // Initialize website
+        function initWebsite() {
+            loadBerita();
+            loadGaleri();
+            loadVideos();
+            loadInfoTambahan();
+            loadMisi();
+            loadAdminForm();
+            loadDesign(); // Load saved design settings
+        }
+
+        // Load berita
+        function loadBerita() {
+            const container = document.getElementById('beritaContainer');
+            container.innerHTML = '';
+            
+            websiteData.berita.forEach(berita => {
+                const beritaCard = `
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                        <div class="p-6">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mr-4">
+                                    <i class="${berita.icon} text-white"></i>
+                                </div>
+                                <div class="text-sm text-gray-500">${formatDate(berita.date)}</div>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">${berita.title}</h3>
+                            <p class="text-gray-600 leading-relaxed">${berita.content}</p>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += beritaCard;
+            });
+        }
+
+        // Load galeri
+        function loadGaleri() {
+            const container = document.getElementById('galeriContainer');
+            container.innerHTML = '';
+            
+            websiteData.galeri.forEach((item, index) => {
+                let galeriCard;
+                if (item.type === 'image' && item.url) {
+                    galeriCard = `
+                        <div class="card-hover cursor-pointer" onclick="showImageModal('${item.url}', '${item.title}')">
+                            <div class="aspect-square rounded-lg overflow-hidden">
+                                <img src="${item.url}" alt="${item.title}" class="w-full h-full object-cover">
+                            </div>
+                            <h4 class="text-center mt-3 font-semibold text-gray-800">${item.title}</h4>
+                            <p class="text-center text-sm text-gray-500">${item.kategori}</p>
+                            <button onclick="event.stopPropagation(); removeGaleri(${index})" class="mt-2 w-full bg-red-500 text-white py-1 px-2 rounded text-xs hover:bg-red-600">
+                                Hapus
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    galeriCard = `
+                        <div class="card-hover cursor-pointer" onclick="showMessage('Melihat galeri: ${item.title}')">
+                            <div class="aspect-square ${item.color} rounded-lg flex items-center justify-center">
+                                <i class="${item.icon} text-white text-4xl"></i>
+                            </div>
+                            <h4 class="text-center mt-3 font-semibold text-gray-800">${item.title}</h4>
+                            <p class="text-center text-sm text-gray-500">${item.kategori}</p>
+                        </div>
+                    `;
+                }
+                container.innerHTML += galeriCard;
+            });
+        }
+
+        // Load videos
+        function loadVideos() {
+            const container = document.getElementById('videoContainer');
+            container.innerHTML = '';
+            
+            websiteData.videos.forEach((video, index) => {
+                const videoCard = `
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                        <div class="aspect-video">
+                            ${video.type === 'youtube' ? 
+                                `<iframe src="${video.url}" class="w-full h-full" frameborder="0" allowfullscreen></iframe>` :
+                                `<video src="${video.url}" class="w-full h-full object-cover" controls></video>`
+                            }
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-bold text-gray-800 mb-2">${video.title}</h3>
+                            <p class="text-gray-600 text-sm mb-3">${video.desc}</p>
+                            <button onclick="removeVideo(${index})" class="bg-red-500 text-white py-1 px-3 rounded text-sm hover:bg-red-600">
+                                Hapus Video
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += videoCard;
+            });
+        }
+
+        // Load info tambahan
+        function loadInfoTambahan() {
+            document.getElementById('kepalaSekolahInfo').textContent = websiteData.infoTambahan.kepalaSekolah;
+            document.getElementById('tahunBerdiriInfo').textContent = websiteData.infoTambahan.tahunBerdiri;
+            document.getElementById('akreditasiInfo').textContent = websiteData.infoTambahan.akreditasi + ' (Sangat Baik)';
+            document.getElementById('jamOperasionalInfo').innerHTML = websiteData.infoTambahan.jamOperasional.replace(':', '<br>');
+        }
+
+        // Load misi
+        function loadMisi() {
+            const container = document.getElementById('misiContainer');
+            container.innerHTML = '';
+            
+            websiteData.infoTambahan.misi.forEach((misi, index) => {
+                const misiItem = `
+                    <div class="flex items-start space-x-3">
+                        <div class="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                            <span class="text-white font-bold text-sm">${index + 1}</span>
+                        </div>
+                        <p class="text-white/90">${misi}</p>
+                    </div>
+                `;
+                container.innerHTML += misiItem;
+            });
+        }
+
+        // Load admin form with current data
+        function loadAdminForm() {
+            document.getElementById('editHeroTitle').value = websiteData.hero.title;
+            document.getElementById('editHeroSubtitle').value = websiteData.hero.subtitle;
+            document.getElementById('editVisi').value = websiteData.hero.visi;
+            document.getElementById('editProfilTitle').value = websiteData.profil.title;
+            document.getElementById('editProfilDesc').value = websiteData.profil.desc;
+            document.getElementById('editSiswaCount').value = websiteData.profil.siswaCount;
+            document.getElementById('editGuruCount').value = websiteData.profil.guruCount;
+            document.getElementById('editAlamat').value = websiteData.kontak.alamat;
+            document.getElementById('editTelepon').value = websiteData.kontak.telepon;
+            document.getElementById('editEmail').value = websiteData.kontak.email;
+            document.getElementById('editWebsite').value = websiteData.kontak.website;
+            document.getElementById('editFacebook').value = websiteData.kontak.facebook;
+            document.getElementById('editInstagram').value = websiteData.kontak.instagram;
+            document.getElementById('editTwitter').value = websiteData.kontak.twitter;
+            document.getElementById('editYoutube').value = websiteData.kontak.youtube;
+            document.getElementById('editKepalaSekolah').value = websiteData.infoTambahan.kepalaSekolah;
+            document.getElementById('editTahunBerdiri').value = websiteData.infoTambahan.tahunBerdiri;
+            document.getElementById('editAkreditasi').value = websiteData.infoTambahan.akreditasi;
+            document.getElementById('editJamOperasional').value = websiteData.infoTambahan.jamOperasional;
+            document.getElementById('editMisi').value = websiteData.infoTambahan.misi.join('\n');
+        }
+
+        // Login functions
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('loginUsername').focus();
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('loginPassword');
+            const passwordToggle = document.getElementById('passwordToggle');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.classList.remove('fa-eye');
+                passwordToggle.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.classList.remove('fa-eye-slash');
+                passwordToggle.classList.add('fa-eye');
+            }
+        }
+
+        function validateLogin(username, password) {
+            return username === adminCredentials.username && password === adminCredentials.password;
+        }
+
+        function showLoginError(message) {
+            document.getElementById('loginErrorText').textContent = message;
+            document.getElementById('loginError').classList.remove('hidden');
+        }
+
+        function hideLoginError() {
+            document.getElementById('loginError').classList.add('hidden');
+        }
+
+        // Admin functions
+        function showAdminPanel() {
+            if (!isAdminLoggedIn) {
+                showLoginModal();
+                return;
+            }
+            document.getElementById('adminPanel').style.display = 'block';
+            document.getElementById('adminUsername').textContent = currentAdminUsername;
+            loadAdminForm();
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        function logoutAdmin() {
+            if (confirm('Yakin ingin logout dari panel admin?')) {
+                isAdminLoggedIn = false;
+                currentAdminUsername = '';
+                hideAdminPanel();
+                showMessage('Berhasil logout dari panel admin!');
+            }
+        }
+
+        function updateAdminCredentials() {
+            const newUsername = document.getElementById('newAdminUsername').value;
+            const newPassword = document.getElementById('newAdminPassword').value;
+            const confirmPassword = document.getElementById('confirmAdminPassword').value;
+            
+            if (!newUsername || !newPassword || !confirmPassword) {
+                showMessage('Mohon lengkapi semua field!');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showMessage('Password dan konfirmasi password tidak sama!');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                showMessage('Password minimal 6 karakter!');
+                return;
+            }
+            
+            adminCredentials.username = newUsername;
+            adminCredentials.password = newPassword;
+            currentAdminUsername = newUsername;
+            
+            // Clear form
+            document.getElementById('newAdminUsername').value = '';
+            document.getElementById('newAdminPassword').value = '';
+            document.getElementById('confirmAdminPassword').value = '';
+            
+            document.getElementById('adminUsername').textContent = currentAdminUsername;
+            showMessage('Kredensial admin berhasil diperbarui!');
+        }
+
+        function updateMainContent() {
+            websiteData.hero.title = document.getElementById('editHeroTitle').value;
+            websiteData.hero.subtitle = document.getElementById('editHeroSubtitle').value;
+            websiteData.hero.visi = document.getElementById('editVisi').value;
+            
+            document.getElementById('heroTitle').textContent = websiteData.hero.title;
+            document.getElementById('heroSubtitle').textContent = websiteData.hero.subtitle;
+            document.getElementById('visiText').textContent = websiteData.hero.visi;
+            
+            showMessage('Konten utama berhasil diperbarui!');
+        }
+
+        function updateProfil() {
+            websiteData.profil.title = document.getElementById('editProfilTitle').value;
+            websiteData.profil.desc = document.getElementById('editProfilDesc').value;
+            websiteData.profil.siswaCount = document.getElementById('editSiswaCount').value;
+            websiteData.profil.guruCount = document.getElementById('editGuruCount').value;
+            
+            document.getElementById('profilTitle').textContent = websiteData.profil.title;
+            document.getElementById('profilDesc').textContent = websiteData.profil.desc;
+            document.getElementById('siswaCount').textContent = websiteData.profil.siswaCount;
+            document.getElementById('guruCount').textContent = websiteData.profil.guruCount;
+            
+            showMessage('Profil sekolah berhasil diperbarui!');
+        }
+
+        function addBerita() {
+            const title = document.getElementById('newBeritaTitle').value;
+            const content = document.getElementById('newBeritaContent').value;
+            const date = document.getElementById('newBeritaDate').value;
+            
+            if (title && content && date) {
+                const newBerita = {
+                    title: title,
+                    content: content,
+                    date: date,
+                    icon: "fas fa-newspaper"
+                };
+                
+                websiteData.berita.unshift(newBerita);
+                loadBerita();
+                
+                // Clear form
+                document.getElementById('newBeritaTitle').value = '';
+                document.getElementById('newBeritaContent').value = '';
+                document.getElementById('newBeritaDate').value = '';
+                
+                showMessage('Berita baru berhasil ditambahkan!');
+            } else {
+                showMessage('Mohon lengkapi semua field berita!');
+            }
+        }
+
+        function updateKontak() {
+            websiteData.kontak.alamat = document.getElementById('editAlamat').value;
+            websiteData.kontak.telepon = document.getElementById('editTelepon').value;
+            websiteData.kontak.email = document.getElementById('editEmail').value;
+            websiteData.kontak.website = document.getElementById('editWebsite').value;
+            websiteData.kontak.facebook = document.getElementById('editFacebook').value;
+            websiteData.kontak.instagram = document.getElementById('editInstagram').value;
+            websiteData.kontak.twitter = document.getElementById('editTwitter').value;
+            websiteData.kontak.youtube = document.getElementById('editYoutube').value;
+            
+            document.getElementById('alamatSekolah').textContent = websiteData.kontak.alamat;
+            document.getElementById('teleponSekolah').textContent = websiteData.kontak.telepon;
+            document.getElementById('emailSekolah').textContent = websiteData.kontak.email;
+            
+            showMessage('Informasi kontak berhasil diperbarui!');
+        }
+
+        function updateInfoTambahan() {
+            websiteData.infoTambahan.kepalaSekolah = document.getElementById('editKepalaSekolah').value;
+            websiteData.infoTambahan.tahunBerdiri = document.getElementById('editTahunBerdiri').value;
+            websiteData.infoTambahan.akreditasi = document.getElementById('editAkreditasi').value;
+            websiteData.infoTambahan.jamOperasional = document.getElementById('editJamOperasional').value;
+            websiteData.infoTambahan.misi = document.getElementById('editMisi').value.split('\n').filter(m => m.trim());
+            
+            loadInfoTambahan();
+            loadMisi();
+            
+            showMessage('Informasi sekolah berhasil diperbarui!');
+        }
+
+        // Media upload functions
+        function previewLogo(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const logoPreview = document.getElementById('logoPreview');
+                    logoPreview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-full" alt="Logo">`;
+                    websiteData.logo = { type: 'custom', url: e.target.result };
+                    updateLogoInWebsite();
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function resetLogo() {
+            websiteData.logo = { type: 'default', url: null };
+            document.getElementById('logoPreview').innerHTML = '<i class="fas fa-graduation-cap text-white text-2xl"></i>';
+            updateLogoInWebsite();
+            showMessage('Logo berhasil direset ke default!');
+        }
+
+        function updateLogoInWebsite() {
+            const logoElements = document.querySelectorAll('.w-12.h-12.bg-blue-600.rounded-full');
+            logoElements.forEach(element => {
+                if (websiteData.logo.type === 'custom' && websiteData.logo.url) {
+                    element.innerHTML = `<img src="${websiteData.logo.url}" class="w-full h-full object-cover rounded-full" alt="Logo">`;
+                } else {
+                    element.innerHTML = '<i class="fas fa-graduation-cap text-white text-xl"></i>';
+                }
+            });
+        }
+
+        function previewGambar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('gambarPreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function addGambar() {
+            const title = document.getElementById('newGambarTitle').value;
+            const kategori = document.getElementById('gambarKategori').value;
+            const fileInput = document.getElementById('gambarUpload');
+            
+            if (title && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newGambar = {
+                        title: title,
+                        type: 'image',
+                        url: e.target.result,
+                        kategori: kategori
+                    };
+                    
+                    websiteData.galeri.push(newGambar);
+                    loadGaleri();
+                    
+                    // Clear form
+                    document.getElementById('newGambarTitle').value = '';
+                    document.getElementById('gambarUpload').value = '';
+                    document.getElementById('gambarPreview').classList.add('hidden');
+                    
+                    showMessage('Gambar berhasil ditambahkan ke galeri!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                showMessage('Mohon lengkapi judul dan pilih gambar!');
+            }
+        }
+
+        function previewVideo(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 50 * 1024 * 1024) { // 50MB limit
+                    showMessage('Ukuran file video terlalu besar! Maksimal 50MB.');
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewVideo').src = e.target.result;
+                    document.getElementById('videoPreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function addVideo() {
+            const title = document.getElementById('newVideoTitle').value;
+            const desc = document.getElementById('videoDesc').value;
+            const youtubeUrl = document.getElementById('videoYouTube').value;
+            const fileInput = document.getElementById('videoUpload');
+            
+            if (!title || !desc) {
+                showMessage('Mohon lengkapi judul dan deskripsi video!');
+                return;
+            }
+            
+            if (youtubeUrl) {
+                // Convert YouTube URL to embed format
+                let embedUrl = youtubeUrl;
+                if (youtubeUrl.includes('watch?v=')) {
+                    const videoId = youtubeUrl.split('watch?v=')[1].split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+                
+                const newVideo = {
+                    title: title,
+                    desc: desc,
+                    type: 'youtube',
+                    url: embedUrl
+                };
+                
+                websiteData.videos.push(newVideo);
+                loadVideos();
+                
+                // Clear form
+                document.getElementById('newVideoTitle').value = '';
+                document.getElementById('videoDesc').value = '';
+                document.getElementById('videoYouTube').value = '';
+                
+                showMessage('Video YouTube berhasil ditambahkan!');
+            } else if (fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newVideo = {
+                        title: title,
+                        desc: desc,
+                        type: 'file',
+                        url: e.target.result
+                    };
+                    
+                    websiteData.videos.push(newVideo);
+                    loadVideos();
+                    
+                    // Clear form
+                    document.getElementById('newVideoTitle').value = '';
+                    document.getElementById('videoDesc').value = '';
+                    document.getElementById('videoUpload').value = '';
+                    document.getElementById('videoPreview').classList.add('hidden');
+                    
+                    showMessage('Video berhasil ditambahkan!');
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                showMessage('Mohon masukkan link YouTube atau upload file video!');
+            }
+        }
+
+        function removeGaleri(index) {
+            if (confirm('Yakin ingin menghapus gambar ini?')) {
+                websiteData.galeri.splice(index, 1);
+                loadGaleri();
+                showMessage('Gambar berhasil dihapus!');
+            }
+        }
+
+        function removeVideo(index) {
+            if (confirm('Yakin ingin menghapus video ini?')) {
+                websiteData.videos.splice(index, 1);
+                loadVideos();
+                showMessage('Video berhasil dihapus!');
+            }
+        }
+
+        function showImageModal(url, title) {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="max-w-4xl max-h-full p-4">
+                    <img src="${url}" alt="${title}" class="max-w-full max-h-full object-contain">
+                    <div class="text-center mt-4">
+                        <h3 class="text-white text-xl font-bold">${title}</h3>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="mt-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Data management functions
+        function exportData() {
+            const exportData = {
+                websiteData: websiteData,
+                designSettings: designSettings
+            };
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'smpn2-sukabumi-data.json';
+            link.click();
+            showMessage('Data berhasil diexport!');
+        }
+
+        function importData(input) {
+            if (input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.websiteData) {
+                            websiteData = importedData.websiteData;
+                        }
+                        if (importedData.designSettings) {
+                            designSettings = importedData.designSettings;
+                        }
+                        initWebsite();
+                        showMessage('Data berhasil diimport!');
+                    } catch (error) {
+                        showMessage('File tidak valid! Mohon pilih file JSON yang benar.');
+                    }
+                };
+                reader.readAsText(input.files[0]);
+            }
+        }
+
+        function resetAllData() {
+            if (confirm('Yakin ingin mereset semua data? Tindakan ini tidak dapat dibatalkan!')) {
+                location.reload();
+            }
+        }
+
+        // Utility functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        function showMessage(message) {
+            alert(message);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+                // Hide mobile menu after clicking
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+
+        // Initialize website when page loads
+        document.addEventListener('DOMContentLoaded', initWebsite);
+
+        // Set today's date as default for new berita
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('newBeritaDate').value = today;
+        });
+
+        // Login form handler
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('loginUsername').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!username || !password) {
+                    showLoginError('Mohon lengkapi username dan password!');
+                    return;
+                }
+                
+                if (validateLogin(username, password)) {
+                    isAdminLoggedIn = true;
+                    currentAdminUsername = username;
+                    hideLoginModal();
+                    showAdminPanel();
+                    showMessage('Berhasil login ke panel admin!');
+                } else {
+                    showLoginError('Username atau password salah!');
+                    document.getElementById('loginPassword').value = '';
+                    document.getElementById('loginPassword').focus();
+                }
+            });
+            
+            // Enter key handler for login modal
+            document.getElementById('loginModal').addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    hideLoginModal();
+                }
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96a1252ad78bf8fa',t:'MTc1NDM0MjkxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
